@@ -6,6 +6,13 @@
           setName(name);
           //This closed the modal automatically when the submit button is pressed
           modal.style.display = "none";
+
+var timerSpan = document.getElementById("timer");
+setInterval(function(){
+	seconds++;
+  timerSpan.innerHTML = seconds + " seconds";
+},1000);
+
       };
 
 
@@ -17,6 +24,11 @@ window.onload = function () {
     //     document.getElementById('modal').style.display = "none"
     // };
 };
+
+var startTime =  Date.now() / 1000
+console.log("This is start time " + startTime)
+var endTime;
+var seconds = 0;
 
 (function () {  //This function continually updates the frame
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -158,7 +170,7 @@ sendPosition(player);
         var dirGoal = colCheck(player, goal[i]);  //uses the function colCheck below
 
         if (dirGoal === "l" || dirGoal === "r" || dirGoal === "b" || dirGoal === "t") {  //If the player collides with the goal from any side, an end result will happen
-          window.location = "level2";
+          endGame();
             // player.width = 300;
             // player.height = 300;
             // player.speed = 10;
@@ -203,6 +215,18 @@ sendPosition(player);
 //     console.log(x);
 //     console.log(y);
 //   }
+
+// This function would stop the timer
+function endGame() {
+  endTime = Date.now() / 1000;
+  console.log("This is endTime " + endTime);
+  totalTime = endTime - startTime;
+  console.log("This is totalTime " + totalTime);
+
+  //This makes an alert box for the total time since the page loaded...not from the start time of the modal closing
+  alert("This is total time " + totalTime)
+  // TODO emit totalTime to server
+}
 
 function draw(actor, who) {
 
