@@ -1,22 +1,21 @@
 
       document.getElementById('namebutton').onclick = function () {
           var name = document.getElementById('nametext').value;
+          document.getElementById("nameSpan").innerHTML = "Welcome to the game " + name + ".";
           console.log("Name is " + name);
           setName(name);
+          //This closed the modal automatically when the submit button is pressed
+          modal.style.display = "none";
       };
 
 
 
 window.onload = function () {
 
-
-
-
-
-
-    document.getElementById('button').onclick = function () {
-        document.getElementById('modal').style.display = "none"
-    };
+    //
+    // document.getElementById('button').onclick = function () {
+    //     document.getElementById('modal').style.display = "none"
+    // };
 };
 
 (function () {  //This function continually updates the frame
