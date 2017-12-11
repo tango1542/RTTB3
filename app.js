@@ -15,7 +15,8 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server)
 
-var drawing = require('./game/game')(io);
+// I don't think I need this.
+var raceToTheBox = require('./game/game')(io);
 
 var db_url = process.env.MONGO_URL;
 mongoose.Promise = global.Promise;

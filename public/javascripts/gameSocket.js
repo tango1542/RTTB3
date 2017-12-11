@@ -12,9 +12,18 @@ function sendPosition(x, y) {
   // console.log(player)
 }
 
+function sendTotalTime(totalTime) {
+  socket.emit('sendTotalTime', totalTime);
+  // console.log(player)
+}
+
 
 function setName(name) {
   socket.emit('setName', name);
+}
+
+function setTime(totalTime) {
+  socket.emit('setTime', totalTime);
 }
 
 socket.on('setId', function(id){

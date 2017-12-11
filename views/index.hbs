@@ -1,37 +1,50 @@
 <!doctype html>
 <html>
 <head>
-    <title>Tag!</title>
+    <title>Race to the Box</title>
 </head>
-<body>
+<!-- Just for testing where the mousclick is -->
+<body onclick="showCoords(event)">
 
+
+<!-- Modal pops up when the page loads.  Player must enter name -->
   <div id="modal">
       <div class="modalconent">
-           <h1></h1>
-           <!-- <form method="POST" action="/addPlayer"> -->
+           <h1>Enter your name to start</h1>
   Name: <input id="nametext" name="name" required value={{playerName.name}}>
+  <!-- _id is a hidden value, but is passed. -->
   <input type="hidden" name="_id" value="{{playerName._id}}">
   <br><br><button  id="namebutton" value="submit">Submit</button>
       </div>
   </div>
 
+  <!-- Put a container here to get gameWinner name to the right of the welcome players name. -->
+  <div id="container">
+  <div id="nameSpan"></div>
+  <p id="gameWinner"></p>
+
+  <!-- This is the counting timer that counts upward from 0 -->
+  <div id="timer"></div>
+</div>
+
 <canvas id = "canvas" style="border:1px solid #000"></canvas>
-<h1><time>00:00:00</time></h1>
-<span id="nameSpan"></span>
-<span id="timer"></span>
+<!-- <h1><time>00:00:00</time></h1> -->
 
-<button id="gameend">
+
+<!-- <button id="gameend">
  Cick to end game
-</button>
+</button> -->
 
-<h3>Race to the Box!</h3>
-<p>Up, Down, Left, Right arrow keys move character.  Be the first to get there</p>
+<p id="instructions">Race to the Box!  Up, Down, Left, Right arrow keys move character.  Be the first to get there</p3>
+<br><form id="fastestTimes" action="/fastTimes" method="GET"><button id=fastesttTimes type="submit">Fastest Times</button></form>
+<!-- <button type="button"><a href="/fastTimes">Fastest Times</a></button> -->
 
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/javascripts/gameSocket.js"></script>
 <script src="/javascripts/gameClient.js"></script>
 <script src="/javascripts/modals.js"></script>
+<script src="/javascripts/obstacleBoxes.js"></script>
 
 </body>
 </html>

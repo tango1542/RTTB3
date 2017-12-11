@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/todo";
 //var playerName = require('../models/playerInfo')
 
 
@@ -9,8 +11,29 @@ var line_history = [];
 router.get('/', function(req, res, next) {
   res.io.emit('functionName', 'some data');
   //res.send('hellooooo')
-  res.render('index', { title: 'Drawing Program' });
+  res.render('index', { title: 'Race to the Box' });
 });
+
+// GET fastest times
+router.get('/fastTimes', function(req, res, next) {
+  db.collection("players").find(query).toArray(function(err, result) {
+    if (err) throw err;
+    console.log(result);
+    db.close();
+    res.render('/fastTimes');
+  });
+});
+
+// router.get('/completed', function(req, res, next){
+//
+//   Task.find( {creator: req.user._id, completed:true} )
+//     .then( (docs) => {
+//       res.render('tasks_completed', { title: 'Completed tasks' , tasks: docs });
+//     }).catch( (err) => {
+//     next(err);
+//   });
+//
+// });
 
 router.post('/addPlayer', function(req, res, next) {
   var playuh = playerName(req.body);

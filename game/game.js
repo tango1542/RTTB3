@@ -53,6 +53,20 @@ function init(io) {
 
     })
 
+
+      socket.on("setTime", function(totalTime) {
+        //save here.
+
+        // console.log("Total time is " + totalTime);
+        // + " socket id " + socket.id);
+
+
+        Player.findOneAndUpdate( { socketid : socket.id}, {$set : { totalTime : totalTime }}).then( () => {}).catch((err)=> {console.log(err)});
+
+
+
+    })
+
     // Delete this player
     socket.on('disconnect', function() {
         delete players[socket.id];

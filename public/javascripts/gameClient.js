@@ -1,12 +1,16 @@
 
+
+      // When the submit is clicked in the modal, these actions happen.
       document.getElementById('namebutton').onclick = function () {
           var name = document.getElementById('nametext').value;
           document.getElementById("nameSpan").innerHTML = "Welcome to the game " + name + ".";
-          console.log("Name is " + name);
+          // console.log("Name is " + name);
+          // This is setting the name in the mongo database.
           setName(name);
           //This closed the modal automatically when the submit button is pressed
           modal.style.display = "none";
 
+// This is setting up the timer.
 var timerSpan = document.getElementById("timer");
 setInterval(function(){
 	seconds++;
@@ -16,58 +20,71 @@ setInterval(function(){
       };
 
 
+// I took this onload out.  I don't see why I would need it.
+// window.onload = function () {
+// };
 
-window.onload = function () {
-
-    //
-    // document.getElementById('button').onclick = function () {
-    //     document.getElementById('modal').style.display = "none"
-    // };
-};
-
+// This is part of the time function.  It is initializing the seconds to 0
 var startTime =  Date.now() / 1000
-console.log("This is start time " + startTime)
+// console.log("This is start time " + startTime)
 var endTime;
 var seconds = 0;
 
-(function () {  //This function continually updates the frame
+//This function continually updates the frame...it does not update by any key input.
+(function () {
     var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     window.requestAnimationFrame = requestAnimationFrame;
 })();
 
+// Setting up the canvas
 var canvas = document.getElementById("canvas"),
     ctx = canvas.getContext("2d"),
-    width = 600,
-    height = 480,
+    width = 1200,
+    height = 600,
+
+    // Setting up the player properties
     player = {
-        x: 200,
-        y: 200,
+      // Player initial start location
+        x: 35,
+        y: 500,
+        // Player dimensions
         width: 8,
         height: 18,
-        speed: 3,
+        speed: 5,
+        // x axis and y axis velocity
         velX: 0,
         velY: 0,
-        jumping: false,
-        grounded: false
-
     },
 
+    // Setting up an array for key press objects
     keys = [],
     friction = 0.8;
-    // gravity = 0.3;
 
-var opponents = [];
+canvas.width = width;  //These two settings are setting the width and height of the canvas
+canvas.height = height;
+
+
+var opponents = [];  //Set up an array for openents objects
 var boxes = [];  //Set up an array of boxes to be displayed on the canvas
 var goal = [];  //Set up an array with a goal that will have a different set of instructions when the player collides with this object
 
-// This is creating a goal box object in the goal array
-goal.push({
-  x: 20,
-  y: 40,
-  width: 43,
-  height: 34,
 
+// This is creating a goal box object in the goal array.  When the player collides with this box, an action happens
+goal.push({
+  x: 300,
+  y: 462,
+  width: 60,
+  height: 60,
 })
+
+// This is the real goal location
+// goal.push({
+//   x: 1080,
+//   y: 70,
+//   width: 60,
+//   height: 60,
+// })
+
 
 // These three boxes are the boundary boxes for the canvas.  Without these, the player would fall off the canvas
 boxes.push({  //left boundary
@@ -81,6 +98,7 @@ boxes.push({  //bottom boundary
     y: height - 2,
     width: width,
     height: 50
+
 });
 boxes.push({  //right boundary
     x: width - 10,
@@ -98,14 +116,10 @@ boxes.push({  //top boundary
 
 
 
-canvas.width = width;  //These two settings are setting the width and height of the canvas
-canvas.height = height;
-
 function update() {  //This is the main loop.  It is checking for changes to what needs to be displayed, and redraws the canvas
     // check keys
 
-
-
+// This is a callback function that runs to send the player position to the websocket server
 sendPosition(player);
 
     if (keys[39]) {
@@ -135,19 +149,20 @@ sendPosition(player);
         }
     }
 
-
+    // This multiplies the players x and y velocity by the friction coefficient, so they do not immediately come to a stop.
     player.velX *= friction;
     player.velY *= friction;
-
-
       //Friction will parabollically slow the player down on the x axis
-    // player.velY += gravity;  //gravity has a constant force on the player on the y axix
 
+
+      // Without this setting, the player's previous postions are not erased.  This might be why there is flashing.
     ctx.clearRect(0, 0, width, height);  //This clears the screen after each frame after a player action
+    // This is the color of the exterior box and player.
     ctx.fillStyle = "black";
+
+    // Without this being path method, the players move more slowly.
     ctx.beginPath();
 
-    player.grounded = false;   //
     for (var i = 0; i < boxes.length; i++) {  //This goes through all of the boxes, and draws them in their locations
         ctx.rect(boxes[i].x, boxes[i].y, boxes[i].width, boxes[i].height);
 
@@ -171,36 +186,29 @@ sendPosition(player);
 
         if (dirGoal === "l" || dirGoal === "r" || dirGoal === "b" || dirGoal === "t") {  //If the player collides with the goal from any side, an end result will happen
           endGame();
-            // player.width = 300;
-            // player.height = 300;
-            // player.speed = 10;
         }
-
     }
 
+    // This is changing the players x and y position properties after adding their velocity properties.
     player.x += player.velX;
     player.y += player.velY;
 
-
     ctx.fill();
+    // Would make both the boundaries and the player red
     // ctx.fillStyle = "red";
     ctx.fillRect(player.x, player.y, player.width, player.height);
 
 
     for (var opId in opponents) {
-
       var op = opponents[opId];
-
       if (!op) {
-        continue;  // undefined opponents - probably buggy connect code at the server
+        continue;  // I beleive this is for undefined opponents and avoiding conflict
       }
-
       if (opId == player.id) {
-        //that's us, ignore
+        //Do not draw if this id is the current player's id
         continue;
       }
       draw(op, 'op');
-
     }
 
 
@@ -209,12 +217,12 @@ sendPosition(player);
     requestAnimationFrame(update);  //This finishes the update function, and redraws the canvas
 }
 
-// function showCoords(event) {  //this function runs on a mouseclick.  I used this in the process of pinpointing where I wanted to place the boxes
-//     var x = event.clientX;
-//     var y = event.clientY;
-//     console.log(x);
-//     console.log(y);
-//   }
+function showCoords(event) {  //this function runs on a mouseclick.  I used this in the process of pinpointing where I wanted to place the boxes
+    var x = event.clientX;
+    var y = event.clientY;
+    console.log(x - 60);
+    console.log(y - 120);
+  }
 
 // This function would stop the timer
 function endGame() {
@@ -222,15 +230,23 @@ function endGame() {
   console.log("This is endTime " + endTime);
   totalTime = endTime - startTime;
   console.log("This is totalTime " + totalTime);
+  setTime(totalTime);
+  var name = document.getElementById('nametext').value;
+  console.log(name + " is the name");
+  document.getElementById("gameWinner").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp" + name + " has won the game!";
+
+  // document.documentElement.innerHTML = '';
+
 
   //This makes an alert box for the total time since the page loaded...not from the start time of the modal closing
-  alert("This is total time " + totalTime)
+  // alert("This is total time " + totalTime)
   // TODO emit totalTime to server
 }
 
 function draw(actor, who) {
 
   if (who == "op") {
+    // Seems to turn all of them blue...even main player.  With some flashing black
     // ctx.fillStyle = "blue"
   }
 
@@ -240,6 +256,7 @@ function draw(actor, who) {
 
 
   ctx.fill();
+  // Kinda makes all players flash green...including main player.
   // ctx.fillStyle = "green";
   ctx.fillRect(actor.x, actor.y, actor.width, actor.height);
 
