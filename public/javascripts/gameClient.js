@@ -1,9 +1,9 @@
-
+var intervalTimer;
 
       // When the submit is clicked in the modal, these actions happen.
       document.getElementById('namebutton').onclick = function () {
           var name = document.getElementById('nametext').value;
-          document.getElementById("nameSpan").innerHTML = "Welcome to the game " + name + ".";
+          document.getElementById("nameSpan").innerHTML = "Welcome to Race to the Box " + name + ".";
           // console.log("Name is " + name);
           // This is setting the name in the mongo database.
           setName(name);
@@ -11,11 +11,12 @@
           modal.style.display = "none";
 
 // This is setting up the timer.
+
 var timerSpan = document.getElementById("timer");
-setInterval(function(){
-	seconds++;
+intervalTimer = setInterval(function() {
+  seconds++;
   timerSpan.innerHTML = seconds + " seconds";
-},1000);
+}, 1000);
 
       };
 
@@ -69,21 +70,21 @@ var boxes = [];  //Set up an array of boxes to be displayed on the canvas
 var goal = [];  //Set up an array with a goal that will have a different set of instructions when the player collides with this object
 
 
-// This is creating a goal box object in the goal array.  When the player collides with this box, an action happens
-goal.push({
-  x: 300,
-  y: 462,
-  width: 60,
-  height: 60,
-})
-
-// This is the real goal location
+// This is creating a goal box object in the goal array.  When the player collides with this box, an action happens.  This was one for testing purposes
 // goal.push({
-//   x: 1080,
-//   y: 70,
+//   x: 300,
+//   y: 462,
 //   width: 60,
 //   height: 60,
 // })
+
+// This is the real goal location
+goal.push({
+  x: 1100,
+  y: 50,
+  width: 80,
+  height: 100,
+})
 
 
 // These three boxes are the boundary boxes for the canvas.  Without these, the player would fall off the canvas
@@ -178,16 +179,25 @@ sendPosition(player);
 
     }
 
-
+    var gameover = false;
     for (var i = 0; i < goal.length; i++) {  //This is doing collision detection for the goal object
         ctx.rect(goal[i].x, goal[i].y, goal[i].width, goal[i].height);
 
         var dirGoal = colCheck(player, goal[i]);  //uses the function colCheck below
 
         if (dirGoal === "l" || dirGoal === "r" || dirGoal === "b" || dirGoal === "t") {  //If the player collides with the goal from any side, an end result will happen
-          endGame();
+          gameover = true;
+          break;
         }
     }
+
+    if (gameover) {
+      endGame();
+    }
+
+    // if (!gameover) {
+    //   requestAnimationFrame(update);
+    // }
 
     // This is changing the players x and y position properties after adding their velocity properties.
     player.x += player.velX;
@@ -227,12 +237,15 @@ function showCoords(event) {  //this function runs on a mouseclick.  I used this
 // This function would stop the timer
 function endGame() {
   endTime = Date.now() / 1000;
+  clearInterval(intervalTimer);
   console.log("This is endTime " + endTime);
   totalTime = endTime - startTime;
   console.log("This is totalTime " + totalTime);
   setTime(totalTime);
   var name = document.getElementById('nametext').value;
   console.log(name + " is the name");
+  // getFastTimes();
+
   document.getElementById("gameWinner").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp" + name + " has won the game!";
 
   // document.documentElement.innerHTML = '';
@@ -296,6 +309,14 @@ function colCheck(shapeA, shapeB) {  //This function is running the collision ch
     }
     return colDir;
 }
+
+// function getFastTimes() {
+//   $.get("/fastTimes", function(data){
+//     console.log(data);
+//     document.getElementById("docBody").innerHTML = "Here are the fastest times";
+//
+//   })
+// }
 
 document.body.addEventListener("keydown", function (e) {
     keys[e.keyCode] = true;

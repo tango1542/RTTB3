@@ -1,91 +1,37 @@
-console.log("gameSocket Action")
 
 var socket = io();
 
-// socket.on('allPlayerLocations', function(opponentPositions){
-//   console.log('opponentPositions', opponentPositions)
-// });
 
-
+// This is sending the coordinates of any client player, with the socket.emit, to the websocket server
 function sendPosition(x, y) {
   socket.emit('clientPosition', player);
   // console.log(player)
 }
 
+// This is sending the totalTime, which is the elapsed time until a player collides with the goal box, to the websocket server.
 function sendTotalTime(totalTime) {
   socket.emit('sendTotalTime', totalTime);
   // console.log(player)
 }
 
-
+// This is sending the entered name to the websocket server
 function setName(name) {
   socket.emit('setName', name);
 }
 
+// This is setting the value to be put into the database
 function setTime(totalTime) {
   socket.emit('setTime', totalTime);
 }
 
+// This is creating a player ID to be put in the database.
 socket.on('setId', function(id){
   player.id = id;
   console.log("socket on")
 });
 
+// This is receiving other client players' positions (opponents)
 socket.on('allPlayerLocations', function(players) {
   // console.log('rec all locations', players)
   opponents = players;
 })
-
-socket.on('atMaxPlayers', function(players){
-  message('Reached max players for multiplayer')
-  preventStart()
-})
-
-
-
-// // Prints sockets client in the console of a new client machine when they connect
-// console.log('socket client')
-//
-// // This seems to be creating the socket object
-// var socket = io();
-//
-// // Not really sure what this does.
-// socket.on('functionName', function(data){
-//   console.log(data);
-// })
-//
-//
-// // This function updates the number of total users that are currently participating.
-// // socket.on('totalUsers', function(users){
-// //   console.log('total users ' + users)
-// //   updateUsers(users);
-// // })
-//
-// //not sure what this does at all
-// socket.on('newSquare', function(square){
-//   drawSquare(square);
-// });
-//
-// //not sure what this does either
-// socket.on('allSquares', function(squares){
-//   for (var s = 0 ; s < squares.length ; s++) {
-//     drawSquare(squares[s]);
-//   }
-// });
-//
-//
-// //This actually clears the canvas
-// socket.on('clear', function() {
-//   resetCanvas();
-// })
-//
-// // This prints "timer update" and the number of seconds in the client console.
-// // socket.on('timerUpdate', function(timeleft){
-// //   console.log('timer update ' + timeleft)
-// //    updateTimer(timeleft);
-// // })
-//
-// // Without this function, neither canvas can be drawn in
-// function sendSquare(square) {
-//   socket.emit('clientDrewSquare', square);
-// }

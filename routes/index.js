@@ -15,14 +15,15 @@ router.get('/', function(req, res, next) {
 });
 
 // GET fastest times
-router.get('/fastTimes', function(req, res, next) {
-  db.collection("players").find(query).toArray(function(err, result) {
-    if (err) throw err;
-    console.log(result);
-    db.close();
-    res.render('/fastTimes');
-  });
-});
+// router.get('/fastTimes', function(req, res, next) {
+//   console.log("fastTimes route is being invoked");
+//   db.collection("players").find(query).limit(10).toArray(function(err, result) {
+//     if (err) throw err;
+//     console.log(result);
+//     db.close();
+//     res.json(result);
+//   });
+// });
 
 // router.get('/completed', function(req, res, next){
 //

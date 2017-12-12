@@ -4,8 +4,8 @@
     <title>Race to the Box</title>
 </head>
 <!-- Just for testing where the mousclick is -->
-<body onclick="showCoords(event)">
-
+<!-- <body onclick="showCoords(event)"> -->
+<body>
 
 <!-- Modal pops up when the page loads.  Player must enter name -->
   <div id="modal">
@@ -35,7 +35,7 @@
  Cick to end game
 </button> -->
 
-<p id="instructions">Race to the Box!  Up, Down, Left, Right arrow keys move character.  Be the first to get there</p3>
+<p id="instructions">Up, Down, Left, Right arrow keys move character.  Be the first to get there</p3>
 <br><form id="fastestTimes" action="/fastTimes" method="GET"><button id=fastesttTimes type="submit">Fastest Times</button></form>
 <!-- <button type="button"><a href="/fastTimes">Fastest Times</a></button> -->
 
@@ -45,6 +45,7 @@
 <script src="/javascripts/gameClient.js"></script>
 <script src="/javascripts/modals.js"></script>
 <script src="/javascripts/obstacleBoxes.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 </body>
 </html>
