@@ -1,6 +1,6 @@
 var players = {};
 
-var Player = require('../models/playerinfo');
+var Player = require('../models/playerInfo');
 
 function init(io) {
 
@@ -19,7 +19,7 @@ function init(io) {
     console.log('someone connected', socket.id);
 
     // This is sending out the player positions to everyone.  On the client side, there is logic to only draw opponents.
-    io.sockets.emit('allPlayerLocations', players); 
+    io.sockets.emit('allPlayerLocations', players);
 
 
     socket.on('clientStart', function(player){
